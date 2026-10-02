@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WTM 2026 TikTok Dance Challenge Judging</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--pink:#E6327E;--blue:#1C57B5;--green:#1E9A4B;--yellow:#FFC629;--purple:#7A3DB8;--ink:#1B2140;--soft:#F3F6FD;--line:#DCE3F2;--white:#fff}
+*{box-sizing:border-box}
+body{margin:0;font-family:Nunito,"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--soft);font-size:16px;line-height:1.5}
+h1,h2,h3{font-family:"Baloo 2",Nunito,sans-serif;line-height:1.1;margin:0}
+button,input,select{font:inherit}
+.hero{background:var(--white);border-bottom:6px solid var(--yellow);padding:22px 18px 18px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;right:-60px;top:-40px;width:260px;height:160px;background:var(--pink);transform:rotate(-12deg);border-radius:40% 60% 50% 50%;opacity:.95}
+.hero-in{max-width:1000px;margin:0 auto;position:relative}
+.school{margin:0;font-weight:800;color:var(--blue);font-size:.95rem}
+.hero h1{margin-top:6px}
+.hero .l1{display:block;font-size:clamp(1.6rem,4.5vw,2.6rem);color:var(--blue)}
+.hero .l2{display:inline-block;font-size:clamp(1.3rem,3.6vw,2.1rem);color:#fff;background:var(--ink);padding:2px 14px 0;transform:rotate(-1.5deg);margin-top:6px;box-shadow:5px 5px 0 var(--pink)}
+.sub{margin:12px 0 0;font-weight:700;color:var(--green)}
+.who{max-width:1000px;margin:12px auto 0;position:relative;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.chip{background:var(--soft);border:2px solid var(--line);border-radius:999px;padding:4px 12px;font-weight:700;font-size:.9rem}
+nav{max-width:1000px;margin:16px auto 0;padding:0 14px;display:flex;gap:8px;flex-wrap:wrap}
+nav button{border:2px solid var(--ink);background:#fff;border-radius:12px;padding:8px 14px;font-weight:800;cursor:pointer}
+nav button.on{background:var(--ink);color:#fff;box-shadow:3px 3px 0 var(--yellow)}
+main{max-width:1000px;margin:16px auto 60px;padding:0 14px}
+.panel{background:#fff;border:2px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}
+.panel h2{font-size:1.5rem;margin-bottom:6px}
+.bar{height:8px;border-radius:8px;margin:-18px -18px 14px;border-radius:14px 14px 0 0}
+.muted{color:#5A6385}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.entry{border:2px solid var(--line);border-radius:14px;padding:14px;background:#fff}
+.entry h3{font-size:1.2rem}
+.tag{display:inline-block;font-size:.8rem;font-weight:800;padding:2px 10px;border-radius:999px;color:#fff;margin-bottom:6px}
+.t-pair{background:var(--pink)}.t-ks{background:var(--blue)}
+.btn{border:0;border-radius:10px;padding:9px 14px;font-weight:800;cursor:pointer;background:var(--blue);color:#fff}
+.btn.pink{background:var(--pink)}.btn.green{background:var(--green)}.btn.ghost{background:#fff;color:var(--ink);border:2px solid var(--ink)}
+.btn.red{background:#C62828}.btn.sm{padding:5px 10px;font-size:.85rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn:focus-visible,nav button:focus-visible,input:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+label{font-weight:700;display:block;margin:10px 0 4px}
+input[type=email],input[type=text],input[type=password],input[type=number],input[type=datetime-local]{width:100%;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:#fff}
+input:disabled{background:var(--soft);color:var(--ink)}
+.login{max-width:420px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:560px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+th{background:var(--soft);font-size:.9rem}
+td.num,th.num{text-align:right}
+.sheet td input{max-width:110px;text-align:right}
+.total{font-family:"Baloo 2";font-size:1.6rem;color:var(--green)}
+.lock{font-weight:800;color:var(--green)}.open{font-weight:800;color:#B26A00}
+.rank1{background:#FFF6D6}
+.medal{display:inline-flex;width:30px;height:30px;border-radius:50%;align-items:center;justify-content:center;font-weight:800;background:var(--line)}
+.rank1 .medal{background:var(--yellow)}
+.note{background:#FFF6D6;border-left:6px solid var(--yellow);padding:10px 14px;border-radius:8px;margin:10px 0}
+.alert{background:#FDE7EF;border-left:6px solid var(--pink);padding:10px 14px;border-radius:8px;margin:10px 0}
+.progress{height:14px;background:var(--line);border-radius:10px;overflow:hidden;margin:8px 0}
+.progress span{display:block;height:100%;background:var(--green)}
+.modal{position:fixed;inset:0;background:rgba(27,33,64,.7);display:flex;align-items:center;justify-content:center;padding:14px;z-index:20}
+.modal.hidden{display:none}
+.mbox{background:#fff;border-radius:16px;padding:16px;max-width:520px;width:100%;max-height:92vh;overflow:auto}
+.mbox .x{float:right}
+.vid{width:100%;aspect-ratio:9/16;max-height:72vh;border:0;border-radius:12px;background:#000}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-weight:700;display:none;z-index:30;max-width:90vw}
+.footer{text-align:center;color:#5A6385;font-size:.85rem;margin:30px 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-in">
+    <p class="school">Baluyan Elementary School, Imelda District</p>
+    <h1><span class="l1">World Teachers' Month 2026</span><span class="l2">Search for the Best TikTok Video</span></h1>
+    <p class="sub">TikTok Dance Challenge judging portal</p>
+  </div>
+  <div class="who" id="who"></div>
+</header>
+<nav id="tabs"></nav>
+<main id="app"><div class="panel">Loading the portal...</div></main>
+<div class="footer">Respect. Discipline. Excellence. Service.</div>
+
+<div id="modal" class="modal hidden" onclick="if(event.target===this)closeModal()">
+  <div class="mbox"><button class="btn ghost sm x" onclick="closeModal()">Close</button><div id="mbody"></div></div>
+</div>
+<div id="toast"></div>
+
+<script>
+const S = { token: null, user: null, data: null, tab: null };
+const CATS = ['By Pair', 'By Key Stage'];
+
+function run(fn, ...args) {
+  return new Promise((res, rej) => google.script.run.withSuccessHandler(res)
+    .withFailureHandler(e => rej(e && e.message ? e.message : String(e)))[fn](...args));
+}
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.style.display = 'block'; clearTimeout(t._h); t._h = setTimeout(() => t.style.display = 'none', 3500); }
+function when(iso) { if (!iso) return 'not set'; const d = new Date(iso); return isNaN(d) ? iso : d.toLocaleString('en-PH', { timeZone: 'Asia/Manila', month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }); }
+function fmt(n) { return n === null || n === undefined ? '' : (Math.round(n * 100) / 100).toString(); }
+function entryName(id) { const e = (S.data.entries || []).find(x => x.id === id); return e ? e.name : id; }
+function catTag(cat) { return '<span class="tag ' + (cat === 'By Pair' ? 't-pair' : 't-ks') + '">' + esc(cat) + '</span>'; }
+async function busy(btn, p) { if (btn) btn.disabled = true; try { return await p; } catch (e) { toast(e); throw e; } finally { if (btn) btn.disabled = false; } }
+
+/* ---------- Boot ---------- */
+async function boot() {
+  try { S.token = sessionStorage.getItem('wtm_token'); S.user = JSON.parse(sessionStorage.getItem('wtm_user') || 'null'); } catch (e) {}
+  if (S.token && S.user) { try { await load(); return; } catch (e) { logout(true); } }
+  S.data = await run('getPublic'); S.tab = 'signin'; render();
+}
+async function load() {
+  const fn = { judge: 'getJudge', teacher: 'getTeacher', head: 'getHead' }[S.user.role];
+  S.data = await run(fn, S.token);
+  if (!S.tab || S.tab === 'signin') S.tab = { judge: 'score', teacher: 'lucky', head: 'overview' }[S.user.role];
+  render();
+}
+function logout(silent) {
+  try { sessionStorage.removeItem('wtm_token'); sessionStorage.removeItem('wtm_user'); } catch (e) {}
+  S.token = null; S.user = null; S.tab = 'signin';
+  if (!silent) run('getPublic').then(d => { S.data = d; render(); });
+}
+
+/* ---------- Layout ---------- */
+function tabsFor() {
+  if (!S.user) return [['signin', 'Sign in'], ['entries', 'Entries'], ['results', 'Results']];
+  if (S.user.role === 'judge') return [['score', 'My scoresheet'], ['entries', 'Entries'], ['results', 'Results']];
+  if (S.user.role === 'teacher') return [['lucky', 'Lucky Learner'], ['entries', 'Entries'], ['results', 'Results']];
+  return [['overview', 'Overview'], ['reactions', 'Reactions'], ['scores', 'Scoresheets'], ['luckyhead', 'Lucky Learners'], ['entries', 'Entries'], ['results', 'Results'], ['settings', 'Settings']];
+}
+function render() {
+  document.getElementById('who').innerHTML = S.user
+    ? '<span class="chip">Signed in: ' + esc(S.user.name) + '</span><button class="btn ghost sm" onclick="logout()">Sign out</button>'
+    : '';
+  document.getElementById('tabs').innerHTML = tabsFor().map(t =>
+    '<button class="' + (S.tab === t[0] ? 'on' : '') + '" onclick="go(\'' + t[0] + '\')">' + t[1] + '</button>').join('');
+  const v = { signin: vSignin, entries: vEntries, results: vResults, score: vScore, lucky: vLucky,
+    overview: vOverview, reactions: vReactions, scores: vScores, luckyhead: vLuckyHead, settings: vSettings }[S.tab] || vEntries;
+  document.getElementById('app').innerHTML = v();
+}
+function go(t) { S.tab = t; render(); window.scrollTo(0, 0); }
+
+/* ---------- Sign in ---------- */
+function vSignin() {
+  return '<div class="panel login"><div class="bar" style="background:var(--pink)"></div><h2>Sign in</h2>' +
+    '<p class="muted">Judges use their DepEd email and the judges\' PIN. Teachers use their DepEd email and TALA PIN.</p>' +
+    '<label for="em">DepEd email</label><input id="em" type="email" autocomplete="username" placeholder="name@deped.gov.ph">' +
+    '<label for="pn">PIN</label><input id="pn" type="password" inputmode="numeric" autocomplete="current-password" onkeydown="if(event.key===\'Enter\')doLogin(this)">' +
+    '<div class="row"><button class="btn pink" onclick="doLogin(this)">Sign in</button></div></div>' +
+    '<div class="panel"><h2>Open to everyone</h2><p class="muted">You can watch the entries now. Results appear here once all scoresheets are complete and locked.</p>' +
+    '<div class="row"><button class="btn ghost" onclick="go(\'entries\')">See entries</button><button class="btn ghost" onclick="go(\'results\')">See results</button></div></div>';
+}
+async function doLogin(btn) {
+  const r = await busy(btn, run('login', document.getElementById('em').value, document.getElementById('pn').value));
+  S.token = r.token; S.user = r.user; S.tab = null;
+  try { sessionStorage.setItem('wtm_token', r.token); sessionStorage.setItem('wtm_user', JSON.stringify(r.user)); } catch (e) {}
+  await load(); toast('Welcome, ' + r.user.name + '.');
+}
+
+/* ---------- Entries and video ---------- */
+function embedUrl(u) {
+  if (!u) return '';
+  if (/tiktok\.com/.test(u)) { const m = u.match(/video\/(\d+)/); return m ? 'https://www.tiktok.com/embed/v2/' + m[1] : ''; }
+  if (/facebook\.com|fb\.watch/.test(u)) return 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(u.replace('web.facebook.com', 'www.facebook.com')) + '&show_text=false&width=360';
+  return '';
+}
+function vEntries() {
+  return CATS.map(cat => '<div class="panel"><div class="bar" style="background:' + (cat === 'By Pair' ? 'var(--pink)' : 'var(--blue)') + '"></div><h2>' + cat + '</h2><div class="grid">' +
+    S.data.entries.filter(e => e.cat === cat).map(e =>
+      '<div class="entry">' + catTag(e.cat) + '<h3>' + esc(e.name) + '</h3>' +
+      '<div class="row"><button class="btn" onclick="watch(\'' + e.id + '\')"' + (e.video ? '' : ' disabled') + '>Watch video</button>' +
+      (e.video ? '<a class="btn ghost" href="' + esc(e.video) + '" target="_blank" rel="noopener">Open on Facebook</a>' : '<span class="muted">No link yet</span>') +
+      '</div></div>').join('') + '</div></div>').join('');
+}
+function watch(id) {
+  const e = S.data.entries.find(x => x.id === id), src = embedUrl(e.video);
+  openModal(catTag(e.cat) + '<h2 style="margin:4px 0 10px">' + esc(e.name) + '</h2>' +
+    (src ? '<iframe class="vid" src="' + esc(src) + '" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>' : '') +
+    '<p class="muted" style="font-size:.9rem">If the video does not play here, the post may be private or the link is a short share link. Use the button below.</p>' +
+    '<a class="btn ghost" href="' + esc(e.video) + '" target="_blank" rel="noopener">Open on Facebook</a>');
+}
+function openModal(h) { document.getElementById('mbody').innerHTML = h; document.getElementById('modal').classList.remove('hidden'); }
+function closeModal() { document.getElementById('modal').classList.add('hidden'); document.getElementById('mbody').innerHTML = ''; }
+
+/* ---------- Results ---------- */
+function vResults() {
+  const r = S.data.results, head = S.user && S.user.role === 'head';
+  const pct = Math.round(r.locked / r.needed * 100);
+  let h = '<div class="panel"><div class="bar" style="background:var(--green)"></div><h2>Overall results</h2>';
+  if (!r.complete) {
+    h += '<p>Results will be shown once every judge has completed and locked all scoresheets and the reaction counts are entered.</p>' +
+      '<div class="progress"><span style="width:' + pct + '%"></span></div>' +
+      '<p class="muted">Locked scoresheets: ' + r.locked + ' of ' + r.needed + '. Reaction counts: ' + (r.reactionsDone ? 'entered' : 'not yet entered') + '.</p>';
+    if (head) h += '<div class="note">School Head preview. Teachers and the public cannot see the table below yet.</div>';
+  }
+  h += '</div>';
+  if (!r.cats) return h;
+  return h + r.cats.map(c => {
+    const j = c.rows[0].judges;
+    return '<div class="panel"><h2>' + c.cat + '</h2><div class="tablewrap"><table><thead><tr><th>Rank</th><th>Entry</th>' +
+      j.map(x => '<th class="num">' + esc(x.label) + (head && x.name ? '<br><span class="muted">' + esc(x.name) + '</span>' : '') + '</th>').join('') +
+      '<th class="num">Judges average (90)</th><th class="num">Reactions</th><th class="num">Reaction score (10)</th><th class="num">Final (100)</th></tr></thead><tbody>' +
+      c.rows.map(x => '<tr class="' + (x.rank === 1 ? 'rank1' : '') + '"><td><span class="medal">' + x.rank + '</span></td><td><b>' + esc(x.name) + '</b>' +
+        (x.rank === 1 && x.lucky ? '<br><span class="muted">Lucky Learner: ' + esc(x.lucky) + '</span>' : '') + '</td>' +
+        x.judges.map(z => '<td class="num">' + (z.total === null ? '<span class="open">none</span>' : fmt(z.total)) + (z.total !== null && !z.locked ? ' <span class="open">open</span>' : '') + '</td>').join('') +
+        '<td class="num">' + fmt(x.avg) + '</td><td class="num">' + (x.reactions === null ? '' : x.reactions.toLocaleString()) + '</td><td class="num">' + fmt(x.rscore) + '</td><td class="num"><b>' + fmt(x.final) + '</b></td></tr>').join('') +
+      '</tbody></table></div></div>';
+  }).join('') + '<p class="muted">Reaction score = (entry reactions divided by the highest reactions in its category) times 10.</p>';
+}
+
+/* ---------- Judge ---------- */
+function vScore() {
+  const d = S.data, done = Object.values(d.mine).filter(m => m.locked).length;
+  let h = '<div class="panel"><div class="bar" style="background:var(--blue)"></div><h2>My scoresheet</h2>' +
+    '<p>Rate each entry, then lock it. To change a locked score, unlock it with your PIN.</p>' +
+    '<div class="progress"><span style="width:' + Math.round(done / 6 * 100) + '%"></span></div><p class="muted">Locked: ' + done + ' of 6 entries. Most Reacted TikTok Video (10%) is computed by the system.</p></div>';
+  return h + d.entries.map(e => {
+    const m = d.mine[e.id] || { c: [], locked: false }, L = m.locked;
+    return '<div class="panel" id="card_' + e.id + '">' + catTag(e.cat) + '<h2>' + esc(e.name) + '</h2>' +
+      '<div class="row" style="margin-top:0"><button class="btn ghost sm" onclick="watch(\'' + e.id + '\')">Watch video</button>' +
+      '<span class="' + (L ? 'lock' : 'open') + '">' + (L ? 'Locked' : (d.mine[e.id] ? 'Saved, not locked' : 'Not yet rated')) + '</span></div>' +
+      '<div class="tablewrap sheet"><table><thead><tr><th>Criteria</th><th class="num">Weight</th><th class="num">Your rating</th></tr></thead><tbody>' +
+      d.criteria.map((c, k) => '<tr><td>' + esc(c.n) + '</td><td class="num">' + c.max + '%</td><td class="num"><input type="number" min="0" max="' + c.max + '" step="0.5" id="s_' + e.id + '_' + k + '" value="' + (m.c[k] == null ? '' : m.c[k]) + '"' + (L ? ' disabled' : '') + ' oninput="sum(\'' + e.id + '\')" aria-label="' + esc(c.n) + ', 0 to ' + c.max + '"></td></tr>').join('') +
+      '<tr><td>Most Reacted TikTok Video</td><td class="num">10%</td><td class="num muted">by the system</td></tr>' +
+      '<tr><td><b>Your total</b></td><td class="num">90%</td><td class="num"><span class="total" id="t_' + e.id + '">' + fmt(sumOf(m.c)) + '</span></td></tr></tbody></table></div>' +
+      '<div class="row">' + (L
+        ? '<button class="btn pink" onclick="unlockAsk(\'' + e.id + '\')">Unlock to edit</button>'
+        : '<button class="btn ghost" onclick="saveS(this,\'' + e.id + '\',false)">Save draft</button><button class="btn green" onclick="saveS(this,\'' + e.id + '\',true)">Save and lock</button>') +
+      '</div></div>';
+  }).join('');
+}
+function sumOf(a) { return (a || []).reduce((s, v) => s + (v == null || v === '' ? 0 : Number(v)), 0); }
+function vals(id) { return S.data.criteria.map((c, k) => document.getElementById('s_' + id + '_' + k).value); }
+function sum(id) { document.getElementById('t_' + id).textContent = fmt(sumOf(vals(id))); }
+async function saveS(btn, id, lock) {
+  const v = vals(id);
+  for (let k = 0; k < v.length; k++) { const c = S.data.criteria[k];
+    if (v[k] !== '' && (Number(v[k]) < 0 || Number(v[k]) > c.max)) return toast(c.n + ' must be from 0 to ' + c.max + '.'); }
+  if (lock && !confirm('Lock your scores for ' + entryName(id) + '? You will need your PIN to edit.')) return;
+  S.data = await busy(btn, run('saveScore', S.token, id, v, lock));
+  render(); document.getElementById('card_' + id).scrollIntoView({ block: 'center' });
+  toast(lock ? 'Scores saved and locked.' : 'Draft saved.');
+}
+function unlockAsk(id) {
+  openModal('<h2>Unlock scoresheet</h2><p>' + esc(entryName(id)) + '</p><label for="upin">Your PIN</label><input id="upin" type="password" inputmode="numeric" onkeydown="if(event.key===\'Enter\')doUnlock(this,\'' + id + '\')">' +
+    '<div class="row"><button class="btn pink" onclick="doUnlock(this,\'' + id + '\')">Unlock</button></div>');
+  setTimeout(() => document.getElementById('upin').focus(), 50);
+}
+async function doUnlock(btn, id) {
+  S.data = await busy(btn, run('unlockScore', S.token, id, document.getElementById('upin').value));
+  closeModal(); render(); toast('Unlocked. You can now edit your scores.');
+}
+
+/* ---------- Teacher ---------- */
+function vLucky() {
+  const d = S.data, open = d.luckyOpen;
+  let h = '<div class="panel"><div class="bar" style="background:var(--purple)"></div><h2>Lucky Learner</h2>' +
+    '<p>Type the name of your entry\'s designated Lucky Learner. If your entry wins, the Lucky Learner also receives a cash prize.</p>' +
+    (open ? '<div class="note">Encoding closes on <b>' + when(d.luckyDeadline) + '</b>. Entries with no name by then will have no Lucky Learner.</div>'
+          : '<div class="alert">Encoding is closed since ' + when(d.luckyDeadline) + '.</div>') + '</div>';
+  if (!d.mine.length) return h + '<div class="panel">Your account has no assigned entry yet. Please message the School Head.</div>';
+  return h + d.mine.map(id => {
+    const l = d.lucky[id];
+    return '<div class="panel"><h2>' + esc(entryName(id)) + '</h2>' +
+      '<label for="lk_' + id + '">Lucky Learner\'s full name</label><input id="lk_' + id + '" type="text" value="' + esc(l ? l.name : '') + '"' + (open ? '' : ' disabled') + '>' +
+      (l ? '<p class="muted">Encoded by ' + esc(l.by) + ' on ' + esc(l.updated) + '</p>' : '') +
+      (open ? '<div class="row"><button class="btn" onclick="saveLk(this,\'' + id + '\')">' + (l ? 'Update name' : 'Save name') + '</button></div>' : '') + '</div>';
+  }).join('');
+}
+async function saveLk(btn, id) {
+  S.data = await busy(btn, run('saveLucky', S.token, id, document.getElementById('lk_' + id).value));
+  render(); toast('Lucky Learner saved.');
+}
+
+/* ---------- School Head ---------- */
+function vOverview() {
+  const d = S.data, r = d.results;
+  return '<div class="panel"><div class="bar" style="background:var(--yellow)"></div><h2>Overview</h2>' +
+    '<div class="progress"><span style="width:' + Math.round(r.locked / r.needed * 100) + '%"></span></div>' +
+    '<p>Locked scoresheets: <b>' + r.locked + ' of ' + r.needed + '</b>. Reaction counts: <b>' + (r.reactionsDone ? 'entered' : 'not yet entered') + '</b>. Results visible to all: <b>' + (r.complete ? 'yes' : 'no') + '</b>.</p>' +
+    '<p class="muted">Reaction cutoff: ' + when(d.reactionCutoff) + '. Lucky Learner encoding closes: ' + when(d.luckyDeadline) + '. Teacher accounts loaded: ' + d.teachers + '.</p></div>' +
+    '<div class="panel"><h2>Judges</h2><div class="tablewrap"><table><thead><tr><th>Slot</th><th>Name</th><th>Email</th><th class="num">Locked</th></tr></thead><tbody>' +
+    d.judges.map(j => '<tr><td>Judge ' + j.slot + '</td><td>' + esc(j.name || 'not set') + '</td><td>' + esc(j.email || 'not set') + '</td><td class="num">' +
+      r.cats.reduce((s, c) => s + c.rows.filter(x => x.judges[j.slot - 1].locked).length, 0) + ' of 6</td></tr>').join('') + '</tbody></table></div></div>' +
+    '<div class="panel"><h2>Clear test data</h2><p>Use this before launch to erase sample entries. This cannot be undone.</p><div class="row">' +
+    '<button class="btn red sm" onclick="reset(this,\'scores\')">Erase all scores</button><button class="btn red sm" onclick="reset(this,\'reactions\')">Erase reaction counts</button>' +
+    '<button class="btn red sm" onclick="reset(this,\'lucky\')">Erase Lucky Learners</button><button class="btn red" onclick="reset(this,\'all\')">Erase everything</button></div></div>';
+}
+async function reset(btn, what) {
+  if (prompt('Type ERASE to confirm.') !== 'ERASE') return;
+  S.data = await busy(btn, run('headReset', S.token, what)); render(); toast('Data erased.');
+}
+function vReactions() {
+  const d = S.data, rows = d.results.cats.flatMap(c => c.rows), passed = new Date() >= new Date(d.reactionCutoff);
+  const byId = {}; rows.forEach(x => byId[x.id] = x);
+  return '<div class="panel"><div class="bar" style="background:var(--pink)"></div><h2>Reaction counts</h2>' +
+    '<p>At the cutoff, open each official post and type its total reactions. The system computes the 10 point reaction score per category.</p>' +
+    (passed ? '<div class="note">Cutoff reached: ' + when(d.reactionCutoff) + '. Record the counts as of this time.</div>'
+            : '<div class="alert">Cutoff is ' + when(d.reactionCutoff) + '. Counts may still change until then.</div>') +
+    '<div class="tablewrap"><table><thead><tr><th>Entry</th><th>Category</th><th class="num">Reactions</th><th class="num">Score (10)</th><th></th></tr></thead><tbody>' +
+    d.entries.map(e => '<tr><td>' + esc(e.name) + '</td><td>' + e.cat + '</td><td class="num"><input type="number" min="0" step="1" id="rx_' + e.id + '" value="' + (byId[e.id].reactions == null ? '' : byId[e.id].reactions) + '" style="max-width:130px;text-align:right"></td>' +
+      '<td class="num">' + fmt(byId[e.id].rscore) + '</td><td><a class="btn ghost sm" href="' + esc(e.video) + '" target="_blank" rel="noopener">Open post</a></td></tr>').join('') +
+    '</tbody></table></div><div class="row"><button class="btn green" onclick="saveRx(this)">Save reaction counts</button></div></div>';
+}
+async function saveRx(btn) {
+  const m = {}; S.data.entries.forEach(e => m[e.id] = document.getElementById('rx_' + e.id).value);
+  S.data = await busy(btn, run('headSaveReactions', S.token, m)); render(); toast('Reaction counts saved.');
+}
+function vScores() {
+  const d = S.data, rows = d.results.cats.flatMap(c => c.rows);
+  return '<div class="panel"><div class="bar" style="background:var(--blue)"></div><h2>Scoresheets</h2><p>Unlock a scoresheet so a judge can correct it, or delete it to erase that rating.</p></div>' +
+    rows.map(x => '<div class="panel">' + catTag(x.cat) + '<h2>' + esc(x.name) + '</h2><div class="tablewrap"><table><thead><tr><th>Judge</th>' +
+      d.criteria.map(c => '<th class="num">' + esc(c.n) + ' (' + c.max + ')</th>').join('') + '<th class="num">Total</th><th>Status</th><th></th></tr></thead><tbody>' +
+      x.judges.map((j, i) => '<tr><td>' + esc(j.label) + (j.name ? '<br><span class="muted">' + esc(j.name) + '</span>' : '') + '</td>' +
+        d.criteria.map((c, k) => '<td class="num">' + fmt(j.c[k]) + '</td>').join('') + '<td class="num"><b>' + fmt(j.total) + '</b></td>' +
+        '<td>' + (j.total === null ? '<span class="muted">none</span>' : j.locked ? '<span class="lock">Locked</span>' : '<span class="open">Open</span>') + '</td><td style="white-space:nowrap">' +
+        (j.locked ? '<button class="btn ghost sm" onclick="hUnlock(this,' + (i + 1) + ',\'' + x.id + '\')">Unlock</button> ' : '') +
+        (j.total !== null ? '<button class="btn red sm" onclick="hDel(this,' + (i + 1) + ',\'' + x.id + '\')">Delete</button>' : '') + '</td></tr>').join('') +
+      '</tbody></table></div></div>').join('');
+}
+async function hUnlock(btn, slot, id) { S.data = await busy(btn, run('headUnlock', S.token, slot, id)); render(); toast('Scoresheet unlocked.'); }
+async function hDel(btn, slot, id) {
+  if (!confirm('Delete Judge ' + slot + ' scores for ' + entryName(id) + '?')) return;
+  S.data = await busy(btn, run('headDeleteScore', S.token, slot, id)); render(); toast('Scores deleted.');
+}
+function vLuckyHead() {
+  const d = S.data;
+  return '<div class="panel"><div class="bar" style="background:var(--purple)"></div><h2>Lucky Learners</h2><p>Encoding closes for teachers on ' + when(d.luckyDeadline) + '. You can still edit or clear names here. Leave a name blank and save to clear it.</p>' +
+    '<div class="tablewrap"><table><thead><tr><th>Entry</th><th>Lucky Learner</th><th>Encoded by</th><th></th></tr></thead><tbody>' +
+    d.entries.map(e => { const l = d.lucky[e.id];
+      return '<tr><td>' + esc(e.name) + '</td><td><input type="text" id="hl_' + e.id + '" value="' + esc(l ? l.name : '') + '"></td><td class="muted">' + (l ? esc(l.by) + '<br>' + esc(l.updated) : 'none') + '</td>' +
+        '<td><button class="btn sm" onclick="hLk(this,\'' + e.id + '\')">Save</button></td></tr>'; }).join('') + '</tbody></table></div></div>';
+}
+async function hLk(btn, id) { S.data = await busy(btn, run('headSaveLucky', S.token, id, document.getElementById('hl_' + id).value)); render(); toast('Lucky Learner updated.'); }
+function toLocalInput(iso) { const d = new Date(iso); if (isNaN(d)) return ''; const m = new Date(d.getTime() + 8 * 3600000); return m.toISOString().slice(0, 16); }
+function vSettings() {
+  const d = S.data;
+  return '<div class="panel"><div class="bar" style="background:var(--green)"></div><h2>Settings</h2>' +
+    '<h3 style="margin-top:10px">Judges</h3>' + d.judges.map(j =>
+      '<label for="j' + j.slot + 'e">Judge ' + j.slot + ' DepEd email</label><input id="j' + j.slot + 'e" type="email" value="' + esc(j.email) + '">' +
+      '<label for="j' + j.slot + 'n">Judge ' + j.slot + ' name (hidden from teachers)</label><input id="j' + j.slot + 'n" type="text" value="' + esc(j.name) + '">').join('') +
+    '<label for="jpin">Judges\' PIN</label><input id="jpin" type="text" placeholder="Leave blank to keep the current PIN">' +
+    '<h3 style="margin-top:18px">Deadlines (Philippine time)</h3>' +
+    '<label for="rc">Reaction cutoff</label><input id="rc" type="datetime-local" value="' + toLocalInput(d.reactionCutoff) + '">' +
+    '<label for="ld">Lucky Learner encoding closes</label><input id="ld" type="datetime-local" value="' + toLocalInput(d.luckyDeadline) + '">' +
+    '<h3 style="margin-top:18px">Official entry links</h3>' + d.entries.map(e =>
+      '<label for="v_' + e.id + '">' + esc(e.name) + '</label><input id="v_' + e.id + '" type="text" value="' + esc(e.video) + '">').join('') +
+    '<div class="row"><button class="btn green" onclick="saveSet(this)">Save settings</button></div></div>';
+}
+async function saveSet(btn) {
+  const o = {}, g = id => document.getElementById(id).value;
+  [1, 2, 3].forEach(i => { o['JUDGE' + i + '_EMAIL'] = g('j' + i + 'e').toLowerCase(); o['JUDGE' + i + '_NAME'] = g('j' + i + 'n'); });
+  if (g('jpin').trim()) o.JUDGE_PIN = g('jpin');
+  if (g('rc')) o.REACTION_CUTOFF = g('rc') + ':00+08:00';
+  if (g('ld')) o.LUCKY_DEADLINE = g('ld') + ':00+08:00';
+  S.data.entries.forEach(e => o['VIDEO_' + e.id] = g('v_' + e.id));
+  S.data = await busy(btn, run('headSaveSettings', S.token, o)); render(); toast('Settings saved.');
+}
+
+boot().catch(e => { document.getElementById('app').innerHTML = '<div class="panel alert">' + esc(e) + '</div>'; });
+</script>
+</body>
+</html>
