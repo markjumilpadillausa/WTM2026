@@ -107,6 +107,13 @@ td.num,th.num{text-align:right}
 .mbox{background:#fff;border-radius:18px;padding:18px;max-width:520px;width:100%;max-height:92vh;overflow:auto}
 .mbox .x{float:right}
 #toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-weight:700;display:none;z-index:60;max-width:90vw}
+#busy{position:fixed;inset:0;z-index:90;background:rgba(255,255,255,.7);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;font-weight:800;font-size:1.1rem;cursor:wait}
+#busy.on{display:flex}
+.spin{width:64px;height:64px;border-radius:50%;border:8px solid var(--line);border-top-color:var(--pink);border-right-color:var(--yellow);animation:rot .8s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.switch{display:flex;gap:12px;align-items:center;font-weight:800;cursor:pointer;margin:10px 0}
+.switch input{width:26px;height:26px;accent-color:var(--green)}
+.msgbox{white-space:pre-wrap;background:var(--soft);border-radius:12px;padding:12px;border:2px dashed var(--line);font-size:.95rem}
 #fx{position:fixed;inset:0;pointer-events:none;z-index:80}
 .footer{text-align:center;color:#5A6385;font-size:.9rem;margin:20px 0 30px}
 /* Show mode */
@@ -180,6 +187,7 @@ td.num,th.num{text-align:right}
 <div id="show"></div>
 <div id="printArea"></div>
 <canvas id="fx"></canvas>
+<div id="busy" role="status" aria-live="polite"><div class="spin"></div><div id="busyMsg">Sending...</div></div>
 <div id="toast"></div>
 
 <script>
@@ -210,7 +218,12 @@ function fmt(n) { return n === null || n === undefined || isNaN(n) ? '' : (Math.
 function entryName(id) { const e = (S.data.entries || []).find(x => x.id === id); return e ? e.name : id; }
 function catTag(cat) { return '<span class="tag ' + (cat === 'By Pair' ? 't-pair' : 't-ks') + '">' + esc(cat) + '</span>'; }
 function ord(n) { return n + (n % 10 === 1 && n % 100 !== 11 ? 'st' : n % 10 === 2 && n % 100 !== 12 ? 'nd' : n % 10 === 3 && n % 100 !== 13 ? 'rd' : 'th'); }
-async function busy(btn, p) { if (btn) btn.disabled = true; try { return await p; } catch (e) { toast(e); throw e; } finally { if (btn) btn.disabled = false; } }
+async function busy(btn, p, msg) {
+  const ov = document.getElementById('busy'); document.getElementById('busyMsg').textContent = msg || 'Sending, please wait...';
+  ov.classList.add('on'); if (btn) btn.disabled = true;
+  try { return await p; } catch (e) { toast(e); throw e; } finally { ov.classList.remove('on'); if (btn) btn.disabled = false; }
+}
+const PORTAL = /github\.io/.test(location.hostname) ? location.origin + location.pathname : 'https://markjumilpadillausa.github.io/WTM2026/';
 function critTotals(x) { return S.data.criteria.map((c, k) => x.judges.reduce((s, j) => s + (j.c && j.c[k] != null ? j.c[k] : 0), 0)); }
 function judgeSum(x) { return x.judges.reduce((s, j) => s + (j.total || 0), 0); }
 
@@ -295,23 +308,24 @@ function logout(silent) {
 function tabsFor() {
   const common = [['videos', '&#127916; Video Entries'], ['results', '&#127942; Results']];
   if (!S.user) return [['signin', '&#128273; Sign in']].concat(common);
-  if (S.user.role === 'judge') return [['score', '&#128221; My Scoresheet']].concat(common);
+  if (S.user.role === 'judge') return [['score', '&#128221; My Scoresheet'], ['myresult', '&#128200; My Judging'], ['videos', '&#127916; Video Entries'], ['results', '&#127942; Overall Results']];
   if (S.user.role === 'teacher') return [['lucky', '&#127808; Lucky Learner']].concat(common);
-  return [['overview', '&#128202; Overview'], ['reactions', '&#10084;&#65039; Reactions'], ['scores', '&#128203; Scoresheets'], ['luckyhead', '&#127808; Lucky Learners']].concat(common, [['settings', '&#9881;&#65039; Settings']]);
+  return [['overview', '&#128202; Overview'], ['reactions', '&#10084;&#65039; Reactions'], ['scores', '&#128203; Scoresheets'], ['luckyhead', '&#127808; Lucky Learners']].concat(common, [['messenger', '&#128172; Messenger'], ['settings', '&#9881;&#65039; Settings']]);
 }
-function render() {
+function render() { const y = window.scrollY; draw(); window.scrollTo(0, y); }
+function draw() {
   document.getElementById('who').innerHTML = (S.user
     ? '<span class="chip">&#128075; ' + esc(S.user.name) + '</span><button class="btn ghost sm" onclick="logout()">Sign out</button>'
     : '') + '<button class="btn ghost sm" onclick="refresh(this)">&#128260; Refresh</button>';
   document.getElementById('tabs').innerHTML = tabsFor().map(t =>
     '<button class="' + (S.tab === t[0] ? 'on' : '') + '" onclick="go(\'' + t[0] + '\')">' + t[1] + '</button>').join('');
   const v = { signin: vSignin, videos: vVideos, results: vResults, score: vScore, lucky: vLucky,
-    overview: vOverview, reactions: vReactions, scores: vScores, luckyhead: vLuckyHead, settings: vSettings }[S.tab] || vVideos;
+    overview: vOverview, reactions: vReactions, scores: vScores, luckyhead: vLuckyHead, settings: vSettings, myresult: vMyResult, messenger: vMessenger }[S.tab] || vVideos;
   document.getElementById('app').innerHTML = v();
 }
 function go(t) {
-  S.tab = t; render(); window.scrollTo(0, 0);
-  if (t === 'results' && S.data.results.cats && S.data.results.complete) setTimeout(() => confetti(140), 250);
+  S.tab = t; draw(); window.scrollTo(0, 0);
+  if (t === 'results' && canSeeFinal() && S.data.results.complete) setTimeout(() => confetti(140), 250);
 }
 
 /* ---------- Sign in ---------- */
@@ -325,7 +339,7 @@ function vSignin() {
     '<div class="row"><button class="btn ghost" onclick="go(\'videos\')">&#127916; Watch entries</button><button class="btn ghost" onclick="go(\'results\')">&#127942; See results</button></div></div>';
 }
 async function doLogin(btn) {
-  const r = await busy(btn, run('login', document.getElementById('em').value, document.getElementById('pn').value));
+  const r = await busy(btn, run('login', document.getElementById('em').value, document.getElementById('pn').value), 'Signing in...');
   S.token = r.token; S.user = r.user; S.tab = null;
   try { sessionStorage.setItem('wtm_token', r.token); sessionStorage.setItem('wtm_user', JSON.stringify(r.user)); } catch (e) {}
   await load(); toast('Welcome, ' + r.user.name + '!'); confetti(60);
@@ -352,17 +366,27 @@ function vVideos() {
 }
 
 /* ---------- Results ---------- */
-function canSeeFinal() { const r = S.data.results; return r && r.cats && (r.complete || (S.user && S.user.role === 'head')); }
+function isHead() { return S.user && S.user.role === 'head'; }
+function canSeeFinal() { const r = S.data.results; return !!(r && r.cats && (isHead() || (r.complete && r.released))); }
 function vResults() {
   const r = S.data.results, head = S.user && S.user.role === 'head';
   const pct = Math.round(r.locked / r.needed * 100);
   let h = '';
+  if (!head && !canSeeFinal()) {
+    const judge = S.user && S.user.role === 'judge';
+    return '<div class="panel wait"><div class="bar" style="background:linear-gradient(90deg,var(--pink),var(--yellow),var(--green),var(--blue))"></div><div class="big">&#127873;&#10024;</div>' +
+      '<h2>Results will open after the declaration of winners</h2>' +
+      (judge ? '<p>Thank you so much for sharing your time and expertise, Judge! &#128153; The overall results will open after the declaration of winners. For now, you can view and print your own scores in <b>My Judging</b>.</p><div class="row" style="justify-content:center"><button class="btn" onclick="go(\'myresult\')">&#128200; Go to My Judging</button></div>'
+             : '<p>Thank you for your patience! &#128153; Our judges and tabulators are working with care. Please come back after the declaration of winners during the World Teachers\' Month Celebration.</p>') +
+      '</div>';
+  }
+  if (head) h += releaseBox();
   if (!r.complete) {
     h += '<div class="panel wait"><div class="bar" style="background:var(--green)"></div><div class="big">&#129345;&#9203;</div><h2>Tabulation in progress</h2>' +
       '<p>Results open once all judges lock their scoresheets and the reaction counts are entered.</p>' +
       '<div class="progress"><span style="width:' + pct + '%"></span></div>' +
       '<p class="muted">Locked scoresheets: ' + r.locked + ' of ' + r.needed + '. Reaction counts: ' + (r.reactionsDone ? 'entered' : 'not yet entered') + '.</p>' +
-      (head ? '<div class="tip">School Head preview below. Teachers and judges cannot see it yet.</div>' : '') + '</div>';
+      (head ? '<div class="tip">School Head preview below. Teachers and judges cannot see it.</div>' : '') + '</div>';
   }
   if (!r.cats) return h;
   h += '<div class="panel"><div class="bar" style="background:linear-gradient(90deg,var(--pink),var(--yellow),var(--green),var(--blue))"></div><h2>&#127881; ' + (r.complete ? 'And the winners are...' : 'Preview of results') + '</h2>' +
@@ -485,6 +509,54 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'Escape') endShow();
 });
 
+/* ---------- Release and Messenger (School Head) ---------- */
+function releaseBox() {
+  const r = S.data.results;
+  return '<div class="panel" style="border-color:' + (r.released ? 'var(--green)' : 'var(--line)') + '"><div class="bar" style="background:var(--green)"></div><h2>&#128227; Release the results</h2>' +
+    '<label class="switch"><input type="checkbox" ' + (r.released ? 'checked' : '') + (r.complete || r.released ? '' : ' disabled') + ' onchange="setRelease(this)"> Allow teachers, judges, and the public to see and print the overall results</label>' +
+    (r.released ? '<div class="good">Results are open to everyone. Go to the Messenger tab to announce it.</div>'
+      : r.complete ? '<p class="muted">Tick this after the declaration of winners.</p>' : '<p class="muted">Available once all scoresheets are locked and reactions are entered.</p>') + '</div>';
+}
+async function setRelease(cb) {
+  const on = cb.checked;
+  if (!confirm(on ? 'Open the overall results to teachers, judges, and the public?' : 'Hide the overall results again?')) { cb.checked = !on; return; }
+  try { S.data = await busy(cb, run('headSetRelease', S.token, on), on ? 'Opening the results...' : 'Hiding the results...'); render(); toast(on ? 'Results are now open!' : 'Results are hidden.'); if (on) confetti(120); }
+  catch (e) { cb.checked = !on; }
+}
+function msgs() {
+  const d = S.data, r = d.results, judges = judgeStatus();
+  const champs = (r.cats || []).map(c => c.cat + ': ' + c.rows[0].name).join('\n');
+  return [
+    ['&#127942; Results are out now', 'Good day, dear teachers and judges! &#127881;\n\nThe official results of the World Teachers\' Month 2026 Search for the Best TikTok Video are now out! Thank you for every step, every smile, and every bit of effort you shared with us.\n\nView and print the results here:\n' + PORTAL + '\n\nSign in with your DepEd email and PIN, then open the Results tab. Congratulations to everyone! &#128153;'],
+    ['&#127882; Congratulations to the champions', '&#127881; Congratulations to our champions in the World Teachers\' Month 2026 Search for the Best TikTok Video!\n\n' + (champs || '(Champions will appear here once results are complete.)') + '\n\nThank you to all teachers and learners who danced with us. Same moves, bigger gratitude! &#128153;\n\nFull results: ' + PORTAL],
+    ['&#128221; Reminder to judges', 'Good day, our dear judges! &#128153; A gentle reminder to rate all six entries in the judging portal and tap Save and lock for each one. Only locked scores are sent to the tabulators.\n\nPortal: ' + PORTAL + '\nSign in with your DepEd email and the judges\' PIN. Thank you so much!'],
+    ['&#127808; Reminder to teachers', 'Good day, teachers! &#128153; Please encode your entry\'s Lucky Learner in the portal before ' + when(d.luckyDeadline) + '. After that, encoding closes.\n\nPortal: ' + PORTAL + '\nSign in with your DepEd email and TALA PIN. Thank you!']
+  ];
+}
+function vMessenger() {
+  const html = s => s.replace(/&#(\d+);/g, (m, n) => String.fromCodePoint(+n));
+  return '<div class="panel"><div class="bar" style="background:var(--blue)"></div><h2>&#128172; Messenger messages</h2><p class="muted">Tap Copy, then paste in your Messenger group chat.</p></div>' +
+    msgs().map((m, i) => '<div class="panel"><h3>' + m[0] + '</h3><div class="msgbox" id="msg' + i + '">' + esc(html(m[1])) + '</div>' +
+      '<div class="row"><button class="btn" onclick="copyText(document.getElementById(\'msg' + i + '\').textContent)">&#128203; Copy message</button></div></div>').join('');
+}
+function copyText(t) { (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast('Copied! Paste it in Messenger.'), () => prompt('Copy this message:', t)); }
+
+/* ---------- Judge: own results ---------- */
+function vMyResult() {
+  const d = S.data;
+  return '<div class="panel"><div class="bar" style="background:var(--purple)"></div><h2>&#128200; My Judging</h2>' +
+    '<p>These are your own scores, ranked from highest to lowest. The overall results, which combine all judges and the reaction score, will open after the declaration of winners. &#128153;</p>' +
+    '<div class="row"><button class="btn ghost big" onclick="printMySheet()">&#128424;&#65039; Print my scoresheet</button></div></div>' +
+    CATS.map(cat => {
+      const list = d.entries.filter(e => e.cat === cat).map(e => Object.assign({ m: d.mine[e.id] }, e)).sort((a, b) => ((b.m && b.m.total) || 0) - ((a.m && a.m.total) || 0));
+      return '<div class="panel"><div class="bar" style="background:' + (cat === 'By Pair' ? 'var(--pink)' : 'var(--blue)') + '"></div><h2>' + cat + '</h2><div class="tablewrap"><table><thead><tr><th>Entry</th>' +
+        d.criteria.map((c, k) => '<th class="num" title="' + esc(c.n) + '">' + SHORT[k] + ' (' + c.max + ')</th>').join('') + '<th class="num">Total (90)</th><th>Status</th></tr></thead><tbody>' +
+        list.map(e => '<tr><td><b>' + esc(e.name) + '</b></td>' + d.criteria.map((c, k) => '<td class="num">' + fmt(e.m ? e.m.c[k] : null) + '</td>').join('') +
+          '<td class="num"><b>' + fmt(e.m ? e.m.total : null) + '</b></td><td>' + (e.m ? (e.m.locked ? '<span class="lock">Locked</span>' : '<span class="open">Draft</span>') : '<span class="none">Not rated</span>') + '</td></tr>').join('') +
+        '</tbody></table></div></div>';
+    }).join('');
+}
+
 /* ---------- Judge ---------- */
 function vScore() {
   const d = S.data, done = Object.values(d.mine).filter(m => m.locked).length, drafts = Object.values(d.mine).filter(m => !m.locked).length;
@@ -493,7 +565,7 @@ function vScore() {
     '<div class="progress"><span style="width:' + Math.round(done / 6 * 100) + '%"></span></div>' +
     '<p class="muted">Locked: <b>' + done + ' of 6</b>' + (drafts ? '. Drafts waiting to be locked: <b>' + drafts + '</b>' : '') + '. Most Reacted TikTok Video (10%) is computed by the tabulators.</p>' +
     (done === 6 ? '<div class="good">&#127881; All done! Your scores are with the tabulators. Thank you, Judge!</div>' : '') +
-    '<div class="row"><button class="btn ghost" onclick="printMySheet()">&#128424;&#65039; Print my scoresheet</button>' + (canSeeFinal() ? '<button class="btn ghost" onclick="printResults()">&#128424;&#65039; Print results</button><button class="btn purple" onclick="startShow()">&#127908; Present results</button>' : '') + '</div></div>' +
+    '<div class="row"><button class="btn ghost" onclick="printMySheet()">&#128424;&#65039; Print my scoresheet</button><button class="btn ghost" onclick="go(\'myresult\')">&#128200; My Judging</button></div></div>' +
     '<div class="tip">&#128250; Tap <b>Watch the video</b>. If Facebook shows a log in box or the uploader\'s profile, just tap <b>X</b> or <b>Close</b>. No need to log in or send a friend request.</div>';
   return h + d.entries.map(e => {
     const m = d.mine[e.id] || { c: [], locked: false }, L = m.locked, c = COLORS[e.id];
@@ -518,8 +590,8 @@ async function saveS(btn, id, lock) {
   for (let k = 0; k < v.length; k++) { const c = S.data.criteria[k];
     if (v[k] !== '' && (Number(v[k]) < 0 || Number(v[k]) > c.max)) return toast(c.n + ' must be from 0 to ' + c.max + '.'); }
   if (lock && !confirm('Lock your scores for ' + entryName(id) + '? They will be sent to the tabulators. You need your PIN to edit.')) return;
-  S.data = await busy(btn, run('saveScore', S.token, id, v, lock));
-  render(); document.getElementById('card_' + id).scrollIntoView({ block: 'center' });
+  S.data = await busy(btn, run('saveScore', S.token, id, v, lock), lock ? 'Locking and sending your scores...' : 'Saving your draft...');
+  render();
   if (lock) { confetti(50); toast('Locked and sent to the tabulators.'); } else toast('Draft saved. Remember to lock it so it counts.');
 }
 function unlockAsk(id) {
@@ -528,7 +600,7 @@ function unlockAsk(id) {
   setTimeout(() => document.getElementById('upin').focus(), 50);
 }
 async function doUnlock(btn, id) {
-  S.data = await busy(btn, run('unlockScore', S.token, id, document.getElementById('upin').value));
+  S.data = await busy(btn, run('unlockScore', S.token, id, document.getElementById('upin').value), 'Unlocking...');
   closeModal(); render(); toast('Unlocked. Lock it again after editing.');
 }
 function openModal(h) { document.getElementById('mbody').innerHTML = h; document.getElementById('modal').classList.remove('hidden'); }
@@ -554,7 +626,7 @@ function vLucky() {
   }).join('');
 }
 async function saveLk(btn, id) {
-  S.data = await busy(btn, run('saveLucky', S.token, id, document.getElementById('lk_' + id).value));
+  S.data = await busy(btn, run('saveLucky', S.token, id, document.getElementById('lk_' + id).value), 'Saving the name...');
   render(); toast('Lucky Learner saved!'); confetti(40);
 }
 
@@ -569,9 +641,9 @@ function judgeStatus() {
 }
 function vOverview() {
   const d = S.data, r = d.results, js = judgeStatus();
-  return '<div class="panel"><div class="bar" style="background:var(--yellow)"></div><h2>&#128202; Overview</h2>' +
+  return releaseBox() + '<div class="panel"><div class="bar" style="background:var(--yellow)"></div><h2>&#128202; Overview</h2>' +
     '<div class="progress"><span style="width:' + Math.round(r.locked / r.needed * 100) + '%"></span></div>' +
-    '<p>Locked scoresheets: <b>' + r.locked + ' of ' + r.needed + '</b>. Reaction counts: <b>' + (r.reactionsDone ? 'entered' : 'not yet entered') + '</b>. Results open to all: <b>' + (r.complete ? 'yes' : 'no') + '</b>.</p>' +
+    '<p>Locked scoresheets: <b>' + r.locked + ' of ' + r.needed + '</b>. Reaction counts: <b>' + (r.reactionsDone ? 'entered' : 'not yet entered') + '</b>. Results released: <b>' + (r.released ? 'yes' : 'no') + '</b>.</p>' +
     '<p class="muted">Reaction cutoff: ' + when(d.reactionCutoff) + '. Lucky Learner encoding closes: ' + when(d.luckyDeadline) + '. Teacher accounts: ' + d.teachers + '.</p>' +
     '<div class="row"><button class="btn purple" onclick="go(\'results\')">&#127942; Results and presentation</button></div></div>' +
     '<div class="panel"><div class="bar" style="background:var(--blue)"></div><h2>&#128269; Judges follow up</h2><p class="muted">Draft scores are not counted until the judge locks them.</p>' +
